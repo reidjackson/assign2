@@ -1,0 +1,21 @@
+USE rjacks47assign2db;
+SELECT * FROM product;
+SELECT * FROM agent;
+SELECT * FROM customer;
+SELECT * FROM purchased;
+
+-- Create a view
+CREATE VIEW customerpurchases AS SELECT customer.firstname, customer.lastname, product.description, purchased.quantity, product.cost, product.cost * purchased.quantity AS "Total Cost" FROM purchased JOIN customer ON purchased.customerid = customer.customerid JOIN product ON purchased.productid = product.productid GROUP BY customer.lastname;
+
+-- View View
+SELECT * FROM customerpurchases;
+
+-- Select where total spent is > 100
+SELECT * FROM customerpurchases HAVING SUM("Total Cost") > 100;
+
+-- Deletes my Mouth Guard product
+DELETE FROM product WHERE description = "Mouth Guard";
+SELECT * FROM product;
+
+DELETE FROM agent WHERE city = "Springfield";
+-- The row for Hugh Grant wasn't deleted because he has customers and is referenced in the customer table, used ON DELETE RESTRICT

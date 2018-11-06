@@ -1,0 +1,89 @@
+Warning: Using a password on the command line interface can be insecure.
+ERROR 1451 (23000) at line 20: Cannot delete or update a parent row: a foreign key constraint fails (`rjacks47assign2db`.`customer`, CONSTRAINT `customer_ibfk_1` FOREIGN KEY (`agentid`) REFERENCES `agent` (`agentid`))
+--------------
+SELECT * FROM product
+--------------
+
+productid	description	cost	quantity
+11	Bike	150.00	200
+12	Socks	2.00	100
+44	Elbow Pads	14.25	120
+55	Mouth Guard	10.25	130
+78	Knee Pads	12.15	70
+88	Roller Blades	75.00	89
+99	Helmet	29.00	30
+--------------
+SELECT * FROM agent
+--------------
+
+agentid	firstname	lastname	city	commission
+11	Regis	Philbin	Boston	33
+12	Rosie	Cox	Ottawa	50
+22	Courtney	Cox	New York	25
+33	David	Letterman	Bedrock	100
+66	Rosie	ODonnell	Ottawa	100
+77	Reid	Jackson	Wheatley	99
+99	Hugh	Grant	Springfield	16
+--------------
+SELECT * FROM customer
+--------------
+
+customerid	firstname	lastname	city	phonenumber	agentid
+10	Barney	Rubble	Boston	777-1234	11
+12	Monty	Burns	Springfield	789-0000	99
+13	Wonder	Woman	Krypto	888-1234	33
+14	Peter	Griffens	Providence	987-4567	99
+15	Fred	Flintstone	Boston	777-2345	11
+21	Homer	Simpson	Springfield	686-8956	99
+31	Sideshow	Bob	Springfield	686-55555	66
+--------------
+SELECT * FROM purchased
+--------------
+
+productid	customerid	quantity
+12	21	14
+12	31	5
+44	14	19
+44	15	2
+44	21	10
+44	31	5
+78	15	2
+78	31	5
+99	21	20
+99	31	5
+--------------
+CREATE VIEW customerpurchases AS SELECT customer.firstname, customer.lastname, product.description, purchased.quantity, product.cost, product.cost * purchased.quantity AS "Total Cost" FROM purchased JOIN customer ON purchased.customerid = customer.customerid JOIN product ON purchased.productid = product.productid GROUP BY customer.lastname
+--------------
+
+--------------
+SELECT * FROM customerpurchases
+--------------
+
+firstname	lastname	description	quantity	cost	Total Cost
+Sideshow	Bob	Socks	5	2.00	10.00
+Fred	Flintstone	Elbow Pads	2	14.25	28.50
+Peter	Griffens	Elbow Pads	19	14.25	270.75
+Homer	Simpson	Socks	14	2.00	28.00
+--------------
+SELECT * FROM customerpurchases HAVING SUM("Total Cost") > 100
+--------------
+
+--------------
+DELETE FROM product WHERE description = "Mouth Guard"
+--------------
+
+--------------
+SELECT * FROM product
+--------------
+
+productid	description	cost	quantity
+11	Bike	150.00	200
+12	Socks	2.00	100
+44	Elbow Pads	14.25	120
+78	Knee Pads	12.15	70
+88	Roller Blades	75.00	89
+99	Helmet	29.00	30
+--------------
+DELETE FROM agent WHERE city = "Springfield"
+--------------
+
